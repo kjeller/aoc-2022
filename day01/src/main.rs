@@ -1,12 +1,58 @@
 mod util;
-use std::env;
+use std::{env, collections::LinkedList};
 
-fn part_1(parsed_input: &Vec<i32>) -> i32 {
-    return parsed_input.iter().sum();
+fn part_1(vec: &Vec<i32>) -> i32 {
+
+    let mut greatest_res: i32 = 0;
+    let mut res: i32 = 0;
+
+    for v in vec {
+        
+        if v.is_positive() {
+            res += v;
+        } else {
+            // new elf calorie
+            if res > greatest_res {
+                println!("{}", greatest_res);
+                greatest_res = res;
+                res = 0;
+            } else {
+                res = 0;
+            }
+        }
+    }
+    return greatest_res;
 }
 
-fn part_2(parsed_input: &Vec<i32>) -> i32 {
-    return parsed_input.iter().product();
+fn part_2(vec: &Vec<i32>) -> i32 {
+    let mut greatest_res: i32 = 0;
+    let mut res: i32 = 0;
+
+    let mut top_stack: LinkedList<i32> = LinkedList::new();
+
+    for v in vec {
+        
+        if v.is_positive() {
+            res += v;
+        } else {
+            // new elf calorie
+            top_stack.push_back(res);
+            if res > greatest_res {
+                
+                greatest_res = res;
+                res = 0;
+            } else {
+                res = 0;
+            }
+        }
+    }
+
+    // dumb way of sorting the stack
+    let mut vec: Vec<_> = top_stack.into_iter().collect();
+    vec.sort();
+    let mut top_stack: LinkedList<_> = vec.into_iter().collect();
+
+    return  top_stack.pop_back().unwrap() + top_stack.pop_back().unwrap() + top_stack.pop_back().unwrap()
 }
 
 fn main() {

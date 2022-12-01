@@ -8,6 +8,16 @@ pub fn read_lines(path: &str) -> Vec<i32> {
 
     reader
         .lines()
-        .map(|line| line.unwrap().parse::<i32>().unwrap())
+        .map(|line|
+            if let Ok(l) = line {
+                if let Ok(val) = l.parse::<i32>() {
+                    val
+                } else {
+                    -1
+                }
+            } else {
+                -1
+            }
+        )
         .collect()
 }
